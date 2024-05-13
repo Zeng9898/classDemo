@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple Chatroom with Gemini API</title>
+</head>
+
+<body>
+    <h1>Chatroom</h1>
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Type your message here..." required>
+        <button type="submit">Send</button>
+    </form>
+    <div id="messages"></div>
+
+    <script>
+        document.getElementById('messageForm').addEventListener('submit', function (event) {
+            event.preventDefault();
+            var message = document.getElementById('messageInput').value;
+            fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=輸入你的api key', {
+                method: '', //填入 method
+                headers: {
+                    'Content-Type': '' //輸入合適的Content-Type
+                },
+                body: JSON.stringify({
+                    "contents": [{
+                        "parts": [{
+                            "text": `你是一位 emoji 大師，擅長將段落中每句話的後方加上數個相對應的 emoji，例如：
+                                    """拉風，引擎發動"""
+                                    會變成
+                                    """拉風😎😎😎引擎發動🔑🔑🔑"""
+                                    當文句中沒有相關的 emoji 時，則使用表情emoji加在句子後面來代表這句話的情緒
+                                    請將以下文字進行轉換` + message
+                        }]
+                    }]
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    displayMessage(message, 'user');
+                    var responseText = '這裡要解析 json';
+                    displayMessage(responseText, 'bot');
+                })
+                .catch(error => console.error('Error:', error));
+
+            document.getElementById('messageInput').value = '';
+        });
+
+        function displayMessage(message, sender) {
+            var messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            document.getElementById('messages').appendChild(messageElement);
+        }
+    </script>
+</body>
+
+</html>
