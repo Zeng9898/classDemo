@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Simple chatroom</title>
+</head>
+
+<body>
+    <h1>Chatroom</h1>
+    <form id="messageForm">
+        <input type="text" id="messageInput" placeholder="Type your text here">
+        <button type="submit">send</button>
+    </form>
+    <div id="messages"></div>
+</body>
+<script>
+    document.getElementById('messageForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+        var message = document.getElementById('messageInput').value;
+        fetch('https://opendata.cwa.gov.tw/fileapi/v1/opendataapi/F-C0032-022?Authorization=rdec-key-123-45678-011121314&format=JSON')
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('messages').innerHTML = `<pre>${JSON.stringify(data, null, 2)}</pre>`;
+            });
+        console.log("Message Sent:" + message);
+        document.getElementById('messageInput').value = '';
+    });
+    function displayMessage(message, sender) {
+            var messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            document.getElementById('messages').appendChild(messageElement);
+        }
+</script>
+
+</html>
